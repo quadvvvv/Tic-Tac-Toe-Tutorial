@@ -30,6 +30,8 @@ export default function Board() {
     setSquares(nextSquares);
   }
 
+  // note: 
+
   return ( // parentheses used to group complex return statements to improve code readability
     //add the value prop to each Square component rendered by the Board component
     <>
