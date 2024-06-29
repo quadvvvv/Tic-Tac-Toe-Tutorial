@@ -29,7 +29,7 @@ export default function Board() {
 
   function handleClick(i){
     const nextSquares = squares.slice() // a copy of the squares array
-    if (squares[i]) {
+    if (calculateWinner(squares) || squares[i]) {
       return;
     }
     if (xIsNext) {
@@ -41,11 +41,18 @@ export default function Board() {
     setSquares(nextSquares);
   }
 
-  // note: 
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = 'Winner: ' + winner;
+  } else {
+    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+  }
 
   return ( // parentheses used to group complex return statements to improve code readability
     //add the value prop to each Square component rendered by the Board component
     <>
+      <div className="status">{status}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -64,3 +71,29 @@ export default function Board() {
     </>
   );
 }
+
+/**
+ * This is a hard coded function, merely test the coordinates.
+ * @param {T} squares 
+ * @returns 
+ * */
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
