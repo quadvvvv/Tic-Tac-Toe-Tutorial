@@ -24,9 +24,20 @@ export default function Board() {
   // returns a stateful value and a function to update it
   const [squares, setSquares] = useState(Array(9).fill(null));
 
+  // new state for feature-competitor
+  const [xIsNext, setXIsNext] = useState(true);
+
   function handleClick(i){
     const nextSquares = squares.slice() // a copy of the squares array
-    nextSquares[i] = "X";
+    if (squares[i]) {
+      return;
+    }
+    if (xIsNext) {
+      nextSquares[i] = "X";
+    } else {
+      nextSquares[i] = "O";
+    }
+    setXIsNext(!xIsNext);
     setSquares(nextSquares);
   }
 
