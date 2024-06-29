@@ -1,23 +1,29 @@
-export default function Square() {
+function Square({ value }){
+  return <button className="square">{value}</button>;
+}
+
+export default function Board() {
   // button property or prop that tells CSS how to style the button
   // the className is "square", which corr. to .square in the styles.css file 
 
   return ( // parentheses used to group complex return statements to improve code readability
+    //add the value prop to each Square component rendered by the Board component
     <>
+      
       <div className="board-row">
-        <button className="square">1</button>
-        <button className="square">1</button>
-        <button className="square">1</button>
+        <Square value ="1"/> 
+        <Square />
+        <Square />
       </div>
       <div className="board-row">
-        <button className="square">2</button>
-        <button className="square">2</button>
-        <button className="square">2</button>
+        <Square />
+        <Square />
+        <Square />
       </div>
       <div className="board-row">
-        <button className="square">3</button>
-        <button className="square">3</button>
-        <button className="square">3</button>
+        <Square />
+        <Square />
+        <Square />
       </div>
     </> 
   );
