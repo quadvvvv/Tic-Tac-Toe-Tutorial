@@ -12,7 +12,7 @@ function Square({value, onSquareClick}){
       </button>;
 }
 
-export default function Board() {
+function Board({xIsNext, squares, onPlay}) {
 
   // note : useState()
   // value stores the value 
@@ -20,25 +20,28 @@ export default function Board() {
   // The null passed to useState is used as the initial value for 
   // this state variable, so value here starts off equal to null.
 
-  // array destructruing syntax 
-  // returns a stateful value and a function to update it
-  const [squares, setSquares] = useState(Array(9).fill(null));
+  // note: removed for stage - 3
+  // reason: now game takes care of the overall history
+  // // array destructruing syntax 
+  // // returns a stateful value and a function to update it
+  // const [squares, setSquares] = useState(Array(9).fill(null));
 
-  // new state for feature-competitor
-  const [xIsNext, setXIsNext] = useState(true);
+  // // new state for feature-competitor
+  // const [xIsNext, setXIsNext] = useState(true);
+
 
   function handleClick(i){
-    const nextSquares = squares.slice() // a copy of the squares array
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
+    // this lie is crucial 
+    const nextSquares = squares.slice();
     if (xIsNext) {
       nextSquares[i] = "X";
     } else {
       nextSquares[i] = "O";
     }
-    setXIsNext(!xIsNext);
-    setSquares(nextSquares);
+    onPlay(nextSquares);
   }
 
   const winner = calculateWinner(squares);
@@ -70,6 +73,34 @@ export default function Board() {
       </div>
     </>
   );
+}
+
+/**
+ * you need the memory of the entire game, therefore, a new top-level component that's higher-level than a board
+ * a game will have different iterations of boards (history)
+ */
+export default function Game(){
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]); // array of array
+
+  const currentSquares = history[history.length-1];
+
+  function handlePlay(nextSquares){
+    setHistory([...history, nextSquares]); // appending the updated squares array as a new entry
+    setXIsNext(!xIsNext);
+  }
+
+
+  return (
+    <div className="game">
+      <div className ="game-board">
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
+      </div>
+      <div className = "game-info">
+        <ol>{/*TODO*/}</ol>
+      </div>
+    </div>
+  )
 }
 
 /**
