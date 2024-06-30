@@ -117,6 +117,8 @@ export default function Game(){
   const xIsNext = currentMove%2===0;
   const currentSquares = history[currentMove];
 
+  const [isDesc, setDesc] = useState(true); // Bonus Point 3: state to track sorting order
+
   function handlePlay(nextSquares){
     const nextHistory = [...history.slice(0,currentMove+1), nextSquares]; // [0, curentMove+1)
     setHistory(nextHistory); // appending the updated squares array as a new entry
@@ -127,9 +129,13 @@ export default function Game(){
     setCurrentMove(nextMove);
   }
 
+  // Bonus Point 3: toggle sort
+  function sortHistory(){
+    setDesc(!isDesc);
+  }
 
   // move is the index of the currentElement of the history array.
-  const moves = history.map((squares, move) => {
+  const moves = history.map((squares, move) => { // redone with sorted history
     let description;
     if(move>0){
       description = "Go to move #" + move;
@@ -138,7 +144,7 @@ export default function Game(){
     }
     return ( // this is put into the ordered list part, therefore it makes perfect sense
       <li key={move}>
-        { move===currentMove ? ( // updated for the bonus point 1 
+        { move===currentMove ? ( // Bonus Point 1
           <span>You are at move #{move}</span>
         ):(
           <button onClick={() => jumpTo(move)}>{description}</button>
@@ -148,13 +154,14 @@ export default function Game(){
   });
   
 
-  return (
+  return ( // modified for Bonus Point 3
     <div className="game">
       <div className ="game-board">
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
       </div>
       <div className = "game-info">
-        <ol>{moves}</ol>
+        <ol>{isDesc? moves:moves.reverse()}</ol>
+        <button onClick={() => sortHistory()}>Sort by : {isDesc? "Descending" : "Ascending"}</button>
       </div>
     </div>
   )
