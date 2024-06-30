@@ -60,27 +60,51 @@ function Board({xIsNext, squares, onPlay}) {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
 
-  return ( // parentheses used to group complex return statements to improve code readability
-    //add the value prop to each Square component rendered by the Board component
-    <>
-      <div className="status">{status}</div>
-      <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
-      </div>
-    </>
-  );
+
+  // Bonus Point 2: Rewrite the board part with two loops
+  const boardSize = 3;
+  const boardToRender = []; // holds jsx elements, which are objects themselves
+
+  for(let row = 0; row < boardSize; row++){
+    const rowToRender = [];
+    for(let col = 0; col<boardSize; col++){
+      const i = row*boardSize+col;
+      rowToRender.push( // you can push jsx element onto an array
+        <Square
+          value={squares[i]}
+          onSquareClick={()=>handleClick(i)}
+        />
+      );
+    }
+    boardToRender.push(<div className="board-row">{rowToRender}</div>);
+  }
+
+  return (<>
+    <div className="status">{status}</div>
+    {boardToRender}
+  </>);
+
+  // return ( // parentheses used to group complex return statements to improve code readability
+  //   //add the value prop to each Square component rendered by the Board component
+  //   <>
+  //     <div className="status">{status}</div>
+  //     <div className="board-row">
+  //       <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+  //       <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+  //       <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+  //     </div>
+  //     <div className="board-row">
+  //       <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+  //       <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+  //       <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+  //     </div>
+  //     <div className="board-row">
+  //       <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+  //       <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+  //       <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+  //     </div>
+  //   </>
+  // );
 }
 
 /**
@@ -114,7 +138,7 @@ export default function Game(){
     }
     return ( // this is put into the ordered list part, therefore it makes perfect sense
       <li key={move}>
-        { move===currentMove ? (
+        { move===currentMove ? ( // updated for the bonus point 1 
           <span>You are at move #{move}</span>
         ):(
           <button onClick={() => jumpTo(move)}>{description}</button>
