@@ -114,11 +114,15 @@ export default function Game(){
     }
     return ( // this is put into the ordered list part, therefore it makes perfect sense
       <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
+        { move===currentMove ? (
+          <span>You are at move #{move}</span>
+        ):(
+          <button onClick={() => jumpTo(move)}>{description}</button>
+        )}
       </li>
     )
   });
-
+  
 
   return (
     <div className="game">
