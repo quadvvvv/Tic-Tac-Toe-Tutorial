@@ -12,6 +12,13 @@ function Square({value, onSquareClick}){
       </button>;
 }
 
+//TODO: Bonus Features
+
+/**
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
 function Board({xIsNext, squares, onPlay}) {
 
   // note : useState()
