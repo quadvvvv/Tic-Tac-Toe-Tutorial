@@ -47,7 +47,11 @@ function Board({xIsNext, squares, onPlay}) {
     const nextSquares = squares.slice();
     nextSquares[i] = xIsNext ? "X" : "O";
     // note: important it's pass by function, so it's actually handlePlay(nextSquares) being called upon!!!
-    onPlay(nextSquares);
+    
+    // Bonus Point 5
+    const r = Math.floor(i/3);
+    const c = i%3;
+    onPlay(nextSquares, [r,c]);
   }
 
   const [winner, winningSquares] = calculateWinner(squares);
@@ -94,15 +98,21 @@ function Board({xIsNext, squares, onPlay}) {
  */
 export default function Game(){
   const [history, setHistory] = useState([Array(9).fill(null)]); // array of array
+
+  const [historyLoc, setHistoryLoc] = useState([[null, null]]); // Bonus Point 5
+
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove%2===0;
   const currentSquares = history[currentMove];
 
   const [isDesc, setDesc] = useState(true); // Bonus Point 3: state to track sorting order
 
-  function handlePlay(nextSquares){
+  function handlePlay(nextSquares, nextLocation){
     const nextHistory = [...history.slice(0,currentMove+1), nextSquares]; // [0, curentMove+1)
+    const nextHistoryLoc = [...historyLoc.slice(0,currentMove+1), nextLocation];
+    
     setHistory(nextHistory); // appending the updated squares array as a new entry
+    setHistoryLoc(nextHistoryLoc); // Bonus Point 5
     setCurrentMove(nextHistory.length-1);
   }
   
@@ -119,14 +129,17 @@ export default function Game(){
   const moves = history.map((squares, move) => { // redone with sorted history
     let description;
     if(move>0){
-      description = "Go to move #" + move;
+      const loc = historyLoc[move]; // Bonus Point 5
+      const locText = loc ? `(${loc[0]}, ${loc[1]})` : "";// `` for format / interpolation
+
+      description = "Go to move #" + move + " @location " + locText;
     }else{
       description = "Go to game start";
     }
     return ( // this is put into the ordered list part, therefore it makes perfect sense
       <li key={move}>
         { move===currentMove ? ( // Bonus Point 1
-          <span>You are at move #{move}</span>
+             <span>You are at {move === 0 ? "the start" : `move #${move} @ location (${historyLoc[move][0]}, ${historyLoc[move][1]})`}</span>
         ):(
           <button onClick={() => jumpTo(move)}>{description}</button>
         )}
